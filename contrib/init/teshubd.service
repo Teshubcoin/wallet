@@ -1,0 +1,26 @@
+[Unit]
+Description=TesHub's distributed currency daemon
+After=network.target
+
+[Service]
+User=teshub
+Group=teshub
+
+Type=forking
+PIDFile=/var/lib/teshubd/teshubd.pid
+
+ExecStart=/usr/bin/teshubd -daemon -pid=/var/lib/teshubd/teshubd.pid \
+          -conf=/etc/teshub/teshub.conf -datadir=/var/lib/teshubd
+
+ExecStop=-/usr/bin/teshub-cli -conf=/etc/teshub/teshub.conf \
+         -datadir=/var/lib/teshubd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
